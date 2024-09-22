@@ -1,0 +1,10 @@
+destination:
+  snowflake:
+    credentials:
+      database: data_warehouse_ads
+      username: sermed-smm4
+      host: jq63080.west-europe.azure
+      password: Realjuve134
+    warehouse: data_warehouse_jobads
+    role: dlt_role
+    schema: staging
