@@ -1,0 +1,65 @@
+Table fct_job_ads {
+    job_id INTEGER [pk, not null]
+    job_details_id INTEGER [not null]
+    employer_id INTEGER [not null]
+    auxiliary_attributes_id INTEGER [not null]
+    number_vacancies INTEGER [not null]
+    relevance_score DECIMAL [not null]  -- Ändrat från FLOAT till DECIMAL och namnändrat
+    publication_date_id INTEGER         -- Ändrat från timestamp till integer för att referera datum
+    application_deadline_id INTEGER     -- Ändrat från timestamp till integer för att referera datum
+    ad_status VARCHAR [not null]        -- Ny kolumn för att indikera status (öppen/stängd etc.)
+}
+
+Table dim_date {
+    date_id INTEGER [pk, not null]
+    date DATE [not null]
+    year INTEGER [not null]
+    month INTEGER [not null]
+    day INTEGER [not null]
+    quarter INTEGER [not null]
+    week_of_year INTEGER [not null]
+    day_of_week INTEGER [not null]
+    is_holiday BOOLEAN [not null]       -- Ny kolumn för att indikera om det är en helgdag
+}
+
+Table dim_job_details {
+    job_details_id INTEGER [pk, not null]
+    headline VARCHAR [not null]
+    description TEXT [not null]         -- Ändrat från VARCHAR till TEXT för längre beskrivningar
+    description_html_formatted TEXT     -- Ändrat från VARCHAR till TEXT
+    employment_type VARCHAR [not null]
+    duration VARCHAR [not null]
+    salary_type VARCHAR [not null]
+    scope_of_work_min DECIMAL
+    scope_of_work_max DECIMAL
+    remote_option BOOLEAN               -- Ny kolumn för att indikera om distansarbete är möjligt
+}
+
+Table dim_employer {
+    employer_id INTEGER [pk, not null]
+    employer_name VARCHAR [not null]
+    employer_workplace VARCHAR [not null]
+    employer_organization_number VARCHAR [not null]
+    workplace_street_address VARCHAR [not null]
+    workplace_region VARCHAR [not null]
+    workplace_postcode VARCHAR [not null]
+    workplace_city VARCHAR [not null]
+    workplace_country VARCHAR [not null]
+    employer_url VARCHAR [not null]
+    industry VARCHAR [not null]         -- Ny kolumn för arbetsgivarens industri
+}
+
+Table dim_auxiliary_attributes {
+    auxiliary_attributes_id INTEGER [pk, not null]
+    experience_required BOOLEAN [not null]
+    driver_license BOOLEAN [not null]
+    access_to_own_car BOOLEAN [not null]
+    webpage_url VARCHAR [not null]
+    language_requirements VARCHAR        -- Ny kolumn för språkkunskapskrav
+}
+
+Ref: fct_job_ads.job_details_id > dim_job_details.job_details_id   -- Ändrat relationssymbolen
+Ref: fct_job_ads.employer_id - dim_employer.employer_id            -- Ändrat relationssymbolen
+Ref: fct_job_ads.auxiliary_attributes_id - dim_auxiliary_attributes.auxiliary_attributes_id
+Ref: fct_job_ads.publication_date_id > dim_date.date_id            -- Ändrat relationssymbolen och kolumn för datum
+Ref: fct_job_ads.application_deadline_id > dim_date.date_id        -- Ändrat relationssymbolen och kolumn för datum
